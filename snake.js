@@ -43,35 +43,27 @@ function keyInput(event) { // key events to control the direction of the snake
 	// code holds the number to map to a direction, using arrow-keys
 	var code = event.keyCode;
 
+	// make sure that the movement does not cause the snake to move into itself
 	if (code == 37) { // left
-		if (direction != "right") {
+		if (positions.length == 1 || (positions[0][0] - 20 != positions[1][0] && positions[0][1] != positions[1][1])) {
 			xSpeed = -20;
 			ySpeed = 0;
-			direction = "left";
-		}
-	} else if (code == 39) { // right
-		if (direction != "left") {
-			xSpeed = 20;
-			ySpeed = 0;
-			direction = "left";
 		}
 	} else if (code == 38) { // up
-		if (direction != "down") {
-			ySpeed = -20;
+		if (positions.length == 1 || (positions[0][0] != positions[1][0] && positions[0][1] - 20 != positions[1][1])) {
 			xSpeed = 0;
-			direction = "up";
+			ySpeed = -20;
+		}
+	} else if (code == 39) { // right
+		if (positions.length == 1 || (positions[0][0] + 20 != positions[1][0] && positions[0][1] != positions[1][1])) {
+			xSpeed = 20;
+			ySpeed = 0;
 		}
 	} else if (code == 40) { // down
-		if (direction != "up") {
-			ySpeed = 20;
+		if (positions.length == 1 || (positions[0][0] != positions[1][0] && positions[0][1] + 20 != positions[1][1])) {
 			xSpeed = 0;
-			direction = "down";
+			ySpeed = 20;
 		}
-	} else if (code == 32) { // space to pause (debugging)
-		// xSpeed = 0;
-		// ySpeed = 0;
-		// direction = "pause";
-		// console.log(appleX + " " + appleY + " " + xPos + " " + yPos);
 	}
 }
 
