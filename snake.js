@@ -111,6 +111,8 @@ function reset() {
 
 	appleX = 100;
 	appleY = 100;
+
+	direction = "pause";
 }
 
 function updateApple() {
@@ -167,8 +169,8 @@ function isLegal() {
 		return false;
 	}
 
-	for (i = 0; i < positions.lenght; i++) {
-		if (xPos == positions[i][0] && yPos == positions[i][1]) {
+	for (i = 1; i < positions.length; i++) {
+		if (positions[0][0] == positions[i][0] && positions[0][1] == positions[i][1]) {
 			return false;
 		}
 	}
