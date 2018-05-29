@@ -21,9 +21,6 @@ positions[0] = [xPos, yPos];
 var newX = -1;
 var newY = -1;
 
-// the direction of the snake to ensure that illegal turns are avoided
-var direction = "pause";
-
 window.onload = function() { // when the page loads
 	// define the canvas to the webpage
 	canvas = document.getElementById('gameCanvas');
@@ -44,22 +41,22 @@ function keyInput(event) { // key events to control the direction of the snake
 	var code = event.keyCode;
 
 	// make sure that the movement does not cause the snake to move into itself
-	if (code == 37) { // left
+	if (code == 74 || code == 37 || code == 65) { // left
 		if (positions.length == 1 || (positions[0][0] - 20 != positions[1][0] && positions[0][1] != positions[1][1])) {
 			xSpeed = -20;
 			ySpeed = 0;
 		}
-	} else if (code == 38) { // up
+	} else if (code == 73 || code == 38 || code == 87) { // up
 		if (positions.length == 1 || (positions[0][0] != positions[1][0] && positions[0][1] - 20 != positions[1][1])) {
 			xSpeed = 0;
 			ySpeed = -20;
 		}
-	} else if (code == 39) { // right
+	} else if (code == 76 || code == 39 || code == 68) { // right
 		if (positions.length == 1 || (positions[0][0] + 20 != positions[1][0] && positions[0][1] != positions[1][1])) {
 			xSpeed = 20;
 			ySpeed = 0;
 		}
-	} else if (code == 40) { // down
+	} else if (code == 75 || code == 40 || code == 83) { // down
 		if (positions.length == 1 || (positions[0][0] != positions[1][0] && positions[0][1] + 20 != positions[1][1])) {
 			xSpeed = 0;
 			ySpeed = 20;
@@ -121,7 +118,6 @@ function reset() { // reset the location of the snake
 	appleY = 100;
 
 	// it will not be moving
-	direction = "pause";
 }
 
 function updateApple() { // create a new location for an apple
