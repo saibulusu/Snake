@@ -1,5 +1,3 @@
-(Complete)
-
 # Snake
 
 Start at the center of the board:
