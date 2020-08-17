@@ -1,3 +1,44 @@
+// Your web app's Firebase configuration
+var firebaseConfig = {
+apiKey: "AIzaSyAamB59l0vbHUpnry3zfauUdw-MDluSDmw",
+authDomain: "snake-scoreboard-8dd39.firebaseapp.com",
+databaseURL: "https://snake-scoreboard-8dd39.firebaseio.com",
+projectId: "snake-scoreboard-8dd39",
+storageBucket: "snake-scoreboard-8dd39.appspot.com",
+messagingSenderId: "562165429932",
+appId: "1:562165429932:web:da66645c6dd3ee5e39d109",
+measurementId: "G-QQWC4MV29G"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
+
+db = firebase.database();
+ref = db.ref("scores");
+highScore = 0;
+best = "";
+
+function writeData() {
+	if (highScore < positions.length) {
+		ref.remove();
+		ref.push({
+			name: name,
+			score: positions.length
+		})	
+	}
+}
+
+function errData(err) {
+	console.log("Error!");
+}
+
+function gotData(data) {
+	var scores = data.val();
+	var keys = Object.keys(scores);
+	highScore = scores[keys[0]].score;
+	best = scores[keys[0]].name;
+}
+
 // define the canvas
 var canvas;
 var canvasContext;
@@ -9,10 +50,12 @@ var xSpeed = 0;
 var ySpeed = 0;
 var edge = 20;
 
+var name = "";
+
 // parameters of the apple
-var appleX = -100;
-var appleY = -100;
- 
+var appleX = -1;
+var appleY = -1;
+
 // holds each new position of the snake after eating the apple
 var positions = [];
 positions[0] = [xPos, yPos];
@@ -25,16 +68,18 @@ window.onload = function() { // when the page loads
 	// define the canvas to the webpage
 	canvas = document.getElementById('gameCanvas');
 	canvasContext = canvas.getContext('2d');
-	canvasContext.canvas.width = window.innerWidth;
-	canvasContext.canvas.height = window.innerHeight;
 
 	// key events are handled
 	window.addEventListener('keydown', keyInput, false);
 
+	name = window.prompt("Enter your name: ");
+
+	updateApple();
+
 	// run 30 frames per second
-	var framesPerSecond = 30;
-	reset();
+	var framesPerSecond = 25;
 	setInterval(updateAll, 1000/framesPerSecond);
+	ref.on("value", gotData, errData);
 }
 
 function keyInput(event) { // key events to control the direction of the snake
@@ -108,10 +153,9 @@ function moveAll() { // update the speed of the snake
 }
 
 function reset() { // reset the location of the snake
+	writeData();
+
 	// set the length of the snake back to 1
-	if (positions.length > 20) {
-		alert("Score: " + positions.length);
-	}
 	positions = new Array();
 	positions[0] = [500, 300];
 
@@ -121,8 +165,6 @@ function reset() { // reset the location of the snake
 
 	// have a defined location for the apple
 	updateApple();
-
-	// it will not be moving
 }
 
 function updateApple() { // create a new location for an apple
@@ -131,7 +173,7 @@ function updateApple() { // create a new location for an apple
 	var upperBoundX = (canvas.width - edge) / edge;
 
 	var lowerBoundY = 1;
-	var upperBoundY = (canvas.height - edge - 4) / edge;
+	var upperBoundY = (canvas.height - edge) / edge;
 
 	// randomly set a location within those given bounds
 	appleX = Math.floor(Math.random() * (upperBoundX - lowerBoundX) + lowerBoundX) * edge;
@@ -157,21 +199,23 @@ function drawAll() { // update the location of everything in the canvas
 
 	// borders
 	colorRect(0, 0, canvas.width, edge, 'white');
-	colorRect(0, 10 * Math.ceil((canvas.height - edge)/10 - 1), canvas.width, 10 * Math.ceil(edge/10) + 10, 'white');
-	colorRect(0, 0, Math.ceil());
 	colorRect(0, 0, edge, canvas.height, 'white');
+	colorRect(0, canvas.height - edge, canvas.width, edge, 'white');
 	colorRect(canvas.width - edge, 0, edge, canvas.height, 'white');
 
 	// apple
-	colorSquare(appleX, appleY, edge, 'grey', 'grey');
+	colorSquare(appleX, appleY, edge, 'red', 'red');
 
 	// score
-	colorText(positions.length + "", canvas.width / 2, canvas.height - 10, 'black');
+	colorText(positions.length + "", canvas.width / 2, canvas.height - 5, 'black');
+
+	// high score
+	colorText("high score: " + best + ", " + highScore, canvas.width / 2 + 50, canvas.height - 5, 'black');
 }
 
 function isLegal() { // check if the given location of the snake is legal
 	// check if the snake head is within the borders
-	if (xPos < Math.ceil(edge/10) + 10) {
+	if (xPos < edge) {
 		return false;
 	}
 
@@ -183,7 +227,7 @@ function isLegal() { // check if the given location of the snake is legal
 		return false;
 	}
 
-	if (yPos + edge > 10 * Math.ceil((canvas.height - edge)/10 - 1)) {
+	if (yPos + edge > canvas.height - edge) {
 		return false;
 	}
 
@@ -215,6 +259,6 @@ function colorRect(topLeftX,topLeftY, boxWidth,boxHeight, fillColor) {
 // helper function to draw text
 function colorText(showWords, textX,textY, fillColor) {
 	canvasContext.fillStyle = fillColor;
-	canvasContext.font = "23px Arial";
 	canvasContext.fillText(showWords, textX, textY);
+	canvasContext.font = "15px Arial";
 }
