@@ -89,12 +89,12 @@ function keyInput(event) { // key events to control the direction of the snake
 	var code = event.keyCode;
 
 	// make sure that the movement does not cause the snake to move into itself
-	if (code == 74 || code == 37 || code == 65) { // left
+	if (code == 72 || code == 37 || code == 65) { // left
 		if (positions.length == 1 || (positions[0][0] - 20 != positions[1][0] && positions[0][1] != positions[1][1])) {
 			xSpeed = -20;
 			ySpeed = 0;
 		}
-	} else if (code == 73 || code == 38 || code == 87) { // up
+	} else if (code == 75 || code == 38 || code == 87) { // up
 		if (positions.length == 1 || (positions[0][0] != positions[1][0] && positions[0][1] - 20 != positions[1][1])) {
 			xSpeed = 0;
 			ySpeed = -20;
@@ -104,7 +104,7 @@ function keyInput(event) { // key events to control the direction of the snake
 			xSpeed = 20;
 			ySpeed = 0;
 		}
-	} else if (code == 75 || code == 40 || code == 83) { // down
+	} else if (code == 74 || code == 40 || code == 83) { // down
 		if (positions.length == 1 || (positions[0][0] != positions[1][0] && positions[0][1] + 20 != positions[1][1])) {
 			xSpeed = 0;
 			ySpeed = 20;
